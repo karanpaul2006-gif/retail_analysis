@@ -47,7 +47,7 @@ The analytical outputs were ingested into Power BI to create an interactive, exe
 
 ---
 Dataset Overview & Data Quality.
-
+Original UCI dataset	1,067,371
 Raw records: 244618
 Missing Customer IDs: 53165
 Non-positive quantities: 6661
