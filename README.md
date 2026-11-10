@@ -1,77 +1,59 @@
-# 🛍️ E-Commerce Retail Analytics: Customer Segmentation & Retention Engine
+## Dataset Source & Description
 
-An end-to-end data analytics pipeline processing over 1 million transactional e-commerce records to uncover purchasing behaviors, evaluate customer lifetime value, and track retention. This project combines **SQL-based ETL processes**, statistical modeling via **RFM (Recency, Frequency, Monetary) Segmentation**, and **Cohort Analysis** to deliver actionable business intelligence through interactive Power BI dashboards.
+This project uses the **Online Retail II dataset** from the UCI Machine Learning Repository, containing 1,067,371 original transactional records from a UK-based online retailer.
 
----
+**Dataset Details:**
+- Source: UCI Machine Learning Repository
+- Original Records: 1,067,371
+- Time Period: December 2009 – December 2011
+- Business Domain: E-Commerce / Retail
+- Key Attributes: Invoice, StockCode, Description, Quantity, InvoiceDate, Price, CustomerID, Country.
 
-## 🛠️ Tech Stack & Tools
+The original dataset is available in the repository as `online_retail_II.csv`.
 
-* **Data Extraction & Transformation:** SQL (SQLite), Python
-* **Data Analysis & Modeling:** Pandas, NumPy
-* **Business Intelligence & Visualization:** Power BI
-* **Environment:** Jupyter Notebook, Git/GitHub
+## Data Cleaning & Preparation
 
----
+The original dataset contains real-world transactional data quality issues. SQL-based filtering and data preparation were performed before customer-level analysis.
 
-## 📊 Key Analytical Pipeline
+Key preprocessing operations included:
 
-### 1. SQL Data Extraction & Cleaning (ETL)
+- Identifying and excluding records with missing Customer IDs for customer-level analysis.
+- Filtering non-positive quantities to exclude returns and cancellation-related records from sales analysis.
+- Handling invalid or non-positive unit prices.
+- Preparing transaction-level revenue using Quantity × Price.
+- Preparing the resulting dataset for customer segmentation and cohort analysis.
 
-* Utilized an in-memory SQLite database to process raw transactional data.
-* Executed SQL queries to filter out missing customer records, remove negative quantities (returns/cancellations), and handle unit price anomalies.
-* Engineered a foundational `Revenue` metric (`Quantity * Price`) directly within the extraction pipeline to prepare the dataset for behavioral modeling.
+**Dataset Processing Summary**
 
-### 2. RFM Customer Segmentation
+| Metric | Records |
+|---|---:|
+| Original UCI Dataset | 1,067,371 |
+| Records Loaded into Analysis | [Insert verified count] |
+| Records Retained After Cleaning | [Insert verified count] |
 
-* **Recency (R):** Measured the days since a customer's last purchase to gauge current engagement.
-* **Frequency (F):** Quantified the total number of distinct orders to identify repeat buyers.
-* **Monetary (M):** Evaluated the total capital spent to determine customer lifetime value (CLV).
-* **Business Impact:** Segmented users into highly actionable behavioral cohorts (*Champions*, *Loyal Customers*, *At Risk (High Value)*, and *Needs Attention*) to allow marketing teams to optimize targeted campaigns and reduce churn.
+The original source size and the final analytical dataset size are reported separately because not every source transaction is suitable for customer-level sales analysis.
 
-### 3. Cohort Retention Analysis
+## Power BI Visualizations
 
-* Grouped customers by their initial acquisition month to establish baseline cohorts.
-* Tracked period-over-period retention curves to monitor customer loyalty and platform stickiness.
-* **Business Impact:** Generated retention matrices to pinpoint exactly when customer drop-offs occur in the lifecycle, enabling proactive retention strategies.
+Power BI was used to develop reporting visuals presenting the analytical findings.
 
----
+The repository includes screenshots of four Power BI report visuals:
 
-## 📈 Power BI Visualizations
+1. Revenue Summary KPI – Total transaction revenue.
+2. Customer Count – Customer-level metrics.
+3. RFM Customer Segmentation – Distribution of customer segments.
+4. Cohort Retention Matrix – Customer retention patterns across acquisition cohorts.
 
-The analytical outputs were ingested into Power BI to create an interactive, executive-level decision support dashboard. Key visual components include:
+These screenshots provide a visual representation of the report. The downloadable Power BI `.pbix` file and live interactive report are not currently included in this repository.
 
-* **Executive Revenue Summary (`sum_ofrevenue.jpeg`):** High-level commercial KPI tracking total financial turnover.
-* **Customer Count Metrics (`count_id.jpeg`):** Active user scale and acquisition tracking.
-* **RFM Profiles Breakdown (`graphical_representation.jpeg`):** Visual distribution of revenue contributions across segmented customer groups.
-* **Cohort Retention Matrix (`overall_record.jpeg`):** Comprehensive heatmap tracking month-over-month retention percentages to quickly identify lifecycle trends.
+## Analytical Findings
 
----
-Dataset Overview & Data Quality.
-Original UCI dataset	1,067,371
-Raw records: 244618
-Missing Customer IDs: 53165
-Non-positive quantities: 6661
-Cleaned records: 186406
-Excluded records: 58212
-Retention percentage: 76.2 %
+The analysis provides insights into:
 
-## 📂 Project Structure
+- Customer purchasing behaviour and historical spending patterns.
+- RFM-based customer segmentation.
+- Monthly cohort retention patterns.
+- Revenue distribution and customer engagement trends.
 
-```text
-retail_analysis/
-│
-├── Retail_analysis.ipynb          # Main Jupyter Notebook (SQL Data Pipeline, RFM, & Cohort Analysis)
-├── online_retail_ii.csv           # Raw dataset source file
-│
-├── 1_Cleaned_Transactions.csv     # Cleaned and processed transactional dataset (SQL Output)
-├── 2_RFM_Segments.csv             # Customer RFM scores and segment classifications
-├── 3_Cohort_Retention.csv         # Cohort analysis retention matrix data
-│
-├── count_id.jpeg                  # Power BI visual: Customer count metrics
-├── graphical_representation.jpeg  # Power BI visual: RFM customer profiles breakdown
-├── overall_record.jpeg            # Power BI visual: Cohort retention matrix heatmap
-├── sum_ofrevenue.jpeg             # Power BI visual: Executive revenue summary KPI
-│
-└── README.md                      # Project documentation
+For example, the December 2009 acquisition cohort recorded 35.3% retention in its second month, highlighting an early customer lifecycle drop-off for further investigation.
 
-```
