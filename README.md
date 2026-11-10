@@ -28,8 +28,11 @@ Key preprocessing operations included:
 | Metric | Records |
 |---|---:|
 | Original UCI Dataset | 1,067,371 |
-| Records Loaded into Analysis | [Insert verified count] |
-| Records Retained After Cleaning | [Insert verified count] |
+| Raw records | 244618 |
+| Missing Customer ID | 53165 |
+|Cleaned records|186406|
+|Excluded records|58212|
+|Retention percentage|76.2 %|
 
 The original source size and the final analytical dataset size are reported separately because not every source transaction is suitable for customer-level sales analysis.
 
