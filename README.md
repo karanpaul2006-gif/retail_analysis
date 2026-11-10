@@ -46,6 +46,14 @@ The analytical outputs were ingested into Power BI to create an interactive, exe
 * **Cohort Retention Matrix (`overall_record.jpeg`):** Comprehensive heatmap tracking month-over-month retention percentages to quickly identify lifecycle trends.
 
 ---
+Dataset Overview & Data Quality.
+
+Raw records: 244618
+Missing Customer IDs: 53165
+Non-positive quantities: 6661
+Cleaned records: 186406
+Excluded records: 58212
+Retention percentage: 76.2 %
 
 ## 📂 Project Structure
 
