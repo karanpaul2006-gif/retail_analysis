@@ -1,423 +1,314 @@
 # E-Commerce Retail Analytics: Customer Segmentation & Cohort Retention
 
-**An end-to-end retail analytics project using Python, Pandas, SQLite, SQL and Power BI to analyse transactional data, understand customer purchasing behaviour, develop RFM segments and evaluate customer retention patterns.**
+An end-to-end retail analytics project using Python, Pandas, SQLite, SQL and Power BI to investigate customer purchasing behaviour, revenue patterns, customer segmentation and retention.
 
-![Python](https://img.shields.io/badge/Python-3.x-blue)
-![SQL](https://img.shields.io/badge/SQL-SQLite-lightgrey)
-![Pandas](https://img.shields.io/badge/Library-Pandas-purple)
-![Power BI](https://img.shields.io/badge/Visualization-Power%20BI-yellow)
-![Jupyter](https://img.shields.io/badge/Environment-Jupyter-orange)
+The project uses the UCI Online Retail II dataset and demonstrates practical data cleaning, SQL-based data preparation, RFM analysis, cohort retention analysis and business-focused reporting.
 
 ---
 
-# 1. Project Overview
+## 1. Project Overview
 
-Understanding customer purchasing behaviour and retention is essential for e-commerce businesses seeking sustainable revenue growth.
+The objective of this project is to analyse historical retail transactions and understand how customers purchase, how valuable different customer segments are, and how customer retention changes over time.
 
-This project analyses the Online Retail II transactional dataset to examine sales performance, identify valuable customer segments and understand customer retention patterns over time.
+The analysis focuses on answering the following business questions:
 
-Using Python, Pandas, SQLite and SQL, the project follows an analytical workflow involving data inspection, preprocessing, transaction-level revenue calculations, customer segmentation and cohort retention analysis.
+- How much revenue is generated from retail transactions?
+- How many unique customers are represented in the dataset?
+- Which customers contribute the most monetary value?
+- How can customers be segmented using Recency, Frequency and Monetary metrics?
+- How does customer retention change across acquisition cohorts?
+- At which stage of the customer lifecycle does retention begin to decline?
 
-The resulting insights are communicated through Power BI reporting visuals covering revenue performance, customer metrics, RFM segmentation and cohort retention.
+The findings are presented through SQL analysis, customer segmentation, cohort analysis and Power BI reporting visuals.
 
-### Key Project Highlights
+---
 
-- Audited 244,618 raw transactional records from the available dataset extract.
-- Retained 186,406 transactions after SQL-based filtering.
-- Achieved a 76.2% transaction retention rate.
-- Calculated transaction-level revenue.
-- Developed customer-level RFM metrics.
-- Segmented customers according to purchasing behaviour.
-- Implemented monthly cohort retention analysis.
-- Created four Power BI reporting visuals.
+## 2. Dataset Information
 
-# 2. Business Problem
+**Dataset:** Online Retail II  
+**Source:** UCI Machine Learning Repository  
+**Business Domain:** E-Commerce / Retail  
+**Original Dataset Size:** 1,067,371 records  
+**Time Period:** December 2009 – December 2011
 
-E-commerce businesses generate large volumes of transactional data, but raw sales records alone do not provide a complete understanding of customer behaviour.
+The Online Retail II dataset contains historical transactions from a UK-based online retailer specialising in giftware and homeware products.
 
-Businesses need to understand:
+### Dataset Source
 
-- Which customers contribute the most revenue?
-- Which customers purchase frequently?
-- Which customers have not purchased recently?
-- How can customers be segmented according to purchasing behaviour?
-- How effectively does the business retain customers after their initial purchase?
-- At which stage of the customer lifecycle does retention decline?
+The original dataset is available through the UCI Machine Learning Repository:
 
-This project addresses these questions through transactional analysis, RFM segmentation and cohort retention analysis.
+https://archive.ics.uci.edu/dataset/502/online+retail+ii
 
-# 3. Dataset Description
+**Important Dataset Clarification**
 
-**Dataset:** Online Retail II
+The original UCI dataset contains 1,067,371 records. This repository uses a 244,618-record working dataset (`online_retail_II.csv`) for the analysis.
 
-**Original Source:** UCI Machine Learning Repository
+The repository's CSV is therefore not the complete original UCI dataset.
 
-The original dataset contains 1,067,371 transactional records from a UK-based online retailer, covering the period December 2009 to December 2011.
-
-The repository contains an analytical extract of 244,618 raw records rather than the complete original dataset.
-
-### Dataset Attributes
+### Important Columns
 
 | Column | Description |
 |---|---|
-| Invoice | Unique invoice identifier |
-| StockCode | Product identifier |
+| Invoice | Transaction invoice number |
+| StockCode | Product identification code |
 | Description | Product description |
 | Quantity | Number of units purchased |
 | InvoiceDate | Date and time of transaction |
 | Price | Unit price |
-| CustomerID | Customer identifier |
+| Customer ID | Unique customer identifier |
 | Country | Customer's country |
 
-The dataset contains real-world transactional characteristics, including missing customer identifiers, non-positive quantities and cancellation-related records.
+---
 
-# 4. Technology Stack
+## 3. Data Cleaning & Preparation
 
-| Technology | Application |
-|---|---|
-| Python | Analytical workflow and data processing |
-| Pandas | Data manipulation and transformation |
-| SQLite | Relational database management |
-| SQL | Data filtering, extraction and aggregation |
-| Jupyter Notebook | Interactive analysis |
-| Power BI | Reporting and data visualization |
-| Git & GitHub | Version control and project management |
+The working dataset initially contained 244,618 records.
 
-# 5. Data Processing & Cleaning
+SQL-based filtering and data preparation were performed to create a reliable dataset for customer-level analysis.
 
-The available raw extract contains 244,618 records.
+### Cleaning Operations
 
-Before conducting customer-level analysis, SQL-based filtering was implemented to improve data consistency.
+- Identified records with missing Customer IDs.
+- Excluded transactions with non-positive quantities.
+- Handled invalid or non-positive unit prices.
+- Prepared transaction revenue using Quantity × Price.
+- Prepared the cleaned transactions for customer-level RFM segmentation and cohort analysis.
 
-### Data Cleaning Operations
-
-The cleaning workflow included:
-
-1. Identifying records with missing Customer IDs.
-2. Excluding records with missing Customer IDs for customer-level analysis.
-3. Filtering non-positive quantities to exclude returns and cancellation-related records from the sales analysis.
-4. Calculating transaction-level revenue using Quantity × Price.
-5. Preparing the cleaned transaction dataset for customer-level analysis.
-
-### SQL Implementation
-
-The primary filtering logic was implemented using SQL:
-
-```sql
-SELECT *
-FROM retail_transactions
-WHERE "Customer ID" IS NOT NULL
-AND Quantity > 0;
-```
-
-This produces the retained transaction dataset used for subsequent analysis.
-
-### Data Processing Summary
+### Data Cleaning Summary
 
 | Metric | Records |
 |---|---:|
 | Original UCI Dataset | 1,067,371 |
-| Raw Extract | 244,618 |
-| Records with Missing Customer IDs | 53,165 |
-| Retained Transactions | 186,406 |
-| Excluded Records | 58,212 |
-| Transaction Retention Rate | 76.2% |
+| Working Dataset | 244,618 |
+| Missing Customer ID | 53,165 |
+| Cleaned Transactions | 186,406 |
+| Total Excluded Records | 58,212 |
+| Retention Percentage | 76.2% |
 
-The original source dataset and the analytical extract are reported separately because the repository contains only a subset of the original transactional records.
+The retention percentage represents the proportion of working records retained after the cleaning process.
 
-# 6. Exploratory Data Analysis & Revenue Analysis
+**Calculation:**
 
-After data cleaning, the retained transactional records were used to examine purchasing activity and revenue patterns.
+186,406 / 244,618 × 100 = 76.2%
 
-Transaction-level revenue was calculated as:
+The original UCI dataset size and the working dataset size are reported separately to maintain transparency about the data used in the analysis.
 
-**Revenue = Quantity × Price**
+---
 
-The analysis focused on understanding transaction values, customer purchasing patterns and overall revenue distribution.
+## 4. Exploratory Data Analysis & SQL Analysis
 
-The cleaned transaction dataset was also exported for subsequent analytical operations.
+SQL was used through SQLite to perform data extraction, filtering, aggregation and customer-level analysis.
 
-# 7. RFM Customer Segmentation
+The analysis includes:
 
-RFM analysis is used to understand customer purchasing behaviour through three dimensions:
+- Transaction-level revenue calculation.
+- Customer-level aggregation.
+- Revenue analysis.
+- Customer counts.
+- Data filtering and validation.
+- RFM metric preparation.
+- Cohort-based retention calculations.
 
-- Recency
-- Frequency
-- Monetary Value
+### SQL Concepts Implemented
 
-### Recency (R)
+- SELECT and WHERE
+- GROUP BY
+- Aggregate functions
+- Data filtering
+- Customer-level aggregation
+- SQLite database operations
 
-Measures how recently a customer made a purchase.
+Python and Pandas were used alongside SQL for data manipulation and analytical calculations.
 
-A lower recency value indicates a more recent purchase.
+---
 
-### Frequency (F)
+## 5. Customer Segmentation: RFM Analysis
 
-Measures the number of distinct purchase occasions or invoices associated with a customer.
+RFM analysis was performed to understand customer purchasing behaviour and identify different customer value groups.
 
-A higher frequency indicates more frequent purchasing activity.
+The three metrics used are:
 
-### Monetary Value (M)
+| Metric | Meaning |
+|---|---|
+| Recency (R) | How recently a customer made a purchase |
+| Frequency (F) | How frequently a customer makes purchases |
+| Monetary (M) | How much a customer spends |
 
-Measures the total transaction revenue generated by a customer.
+Customer-level RFM metrics were calculated using historical transaction data.
 
-A higher monetary value indicates greater historical spending.
+The purpose of this analysis is to distinguish customers based on their purchasing activity and monetary contribution.
 
-### RFM Analysis Workflow
+This provides a foundation for identifying valuable customers, understanding purchasing patterns and supporting targeted customer-retention strategies.
 
-The project calculates customer-level RFM metrics from the cleaned transactional dataset.
+The resulting customer segmentation is exported to:
 
-Customers are evaluated according to their recency, frequency and monetary scores.
+`2_RFM_Segments.csv`
 
-These metrics are then used to classify customers into behavioural segments.
+---
 
-### Business Purpose
+## 6. Cohort Retention Analysis
 
-RFM segmentation helps distinguish between customers with different purchasing patterns.
+Cohort analysis was performed to understand how customer retention changes over time.
 
-For example:
+Customers were grouped into cohorts based on their first purchase month.
 
-- Customers with recent and frequent purchases may represent highly engaged customers.
-- Customers with high historical spending may represent valuable customer relationships.
-- Customers with older purchase activity may require further investigation for potential inactivity.
+Their subsequent purchasing activity was then tracked across later months.
 
-The segmentation provides a structured approach to understanding customer value and engagement.
+### Analysis Objectives
 
-# 8. Cohort Retention Analysis
-
-Cohort analysis is used to understand how customer retention changes over time.
-
-Customers are grouped according to their first purchase month.
-
-Each cohort is then tracked across subsequent months to calculate the percentage of customers who return.
-
-### Cohort Analysis Workflow
-
-1. Identify each customer's first purchase date.
-2. Extract the customer's acquisition month.
-3. Calculate the number of months between the first purchase and subsequent transactions.
-4. Count unique active customers in each cohort-month combination.
-5. Calculate monthly retention percentages.
-6. Organize the results into a cohort retention matrix.
-
-### Retention Formula
-
-**Monthly Retention Rate = Customers Active in a Cohort Month / Original Cohort Customers × 100**
-
-The resulting retention matrix provides a view of how customer engagement changes after acquisition.
+- Understand customer retention over time.
+- Compare purchasing behaviour across acquisition cohorts.
+- Identify early customer lifecycle drop-offs.
+- Examine how customer engagement changes after the first purchase.
 
 ### Key Finding
 
 The December 2009 acquisition cohort recorded **35.3% retention in its second month**.
 
-This indicates an early customer lifecycle drop-off and provides an opportunity for further investigation into customer engagement and retention strategies.
+This indicates an early customer lifecycle drop-off and highlights an area worth investigating through customer engagement and retention initiatives.
 
-The finding should be interpreted within the context of the historical dataset and its observation period.
+The calculated cohort retention results are exported to:
 
-# 9. Power BI Reporting & Visualization
+`3_Cohort_Retention.csv`
 
-Power BI was used to create four reporting visuals to communicate the analytical findings.
+---
 
-The repository includes exported screenshots of these visuals.
+## 7. Power BI Reporting & Visualizations
 
-### 1. Revenue Summary KPI
+Power BI was used to create reporting visuals presenting the results of the retail analysis.
 
-Presents the overall transaction revenue calculated from the cleaned dataset.
+The report includes four major visual components:
 
-### 2. Customer Count
+1. **Revenue Summary KPI** – Displays total transaction revenue.
+2. **Customer Count** – Presents customer-level metrics.
+3. **RFM Customer Segmentation** – Shows the distribution of customer segments.
+4. **Cohort Retention Matrix** – Displays retention patterns across acquisition cohorts.
 
-Communicates customer-level metrics derived from the transactional data.
+### Dashboard Visuals
 
-### 3. RFM Customer Segmentation
+The repository contains screenshots of the Power BI reporting visuals.
 
-Shows the distribution of customers across the developed RFM segments.
+![Overall Record Analysis](overall_record.jpeg)
 
-### 4. Cohort Retention Matrix
+![Revenue Analysis](sum_ofrevenue.jpeg)
 
-Displays monthly customer retention across acquisition cohorts.
+![Customer Count Analysis](count_id.jpeg)
 
-These visuals help communicate revenue performance, customer distribution and retention patterns.
+![Analytical Visualization](graphical_representation.jpeg)
 
-**Deliverable Note:** The repository contains screenshots of the four Power BI reporting visuals. The downloadable `.pbix` file and live interactive dashboard are not currently included.
+**Dashboard Availability Note**
 
-# 10. Key Analytical Findings
+The Power BI report was developed, but the downloadable `.pbix` file and live interactive Power BI report are not included in this repository.
 
-The analysis provides insights into three primary areas.
+The screenshots are provided to demonstrate the reporting visuals created during the project.
 
-### A. Data Quality
+---
 
-The available raw extract contained 244,618 records.
+## 8. Key Analytical Findings
 
-After excluding records with missing Customer IDs and non-positive quantities, 186,406 transactions were retained.
+The project demonstrates the following analytical findings:
 
-This represents a 76.2% retention rate.
+- The working dataset contains 244,618 records before cleaning.
+- 186,406 records were retained after data preparation.
+- The cleaned dataset represents 76.2% of the working records.
+- Customer purchasing behaviour was analysed through RFM metrics.
+- Customers were segmented based on Recency, Frequency and Monetary value.
+- Cohort analysis revealed 35.3% second-month retention for the December 2009 cohort.
+- Four Power BI reporting visuals were developed to communicate the analytical results.
 
-### B. Customer Segmentation
+---
 
-RFM analysis provides a structured way to classify customers based on their purchasing recency, frequency and monetary contribution.
+## 9. Technologies & Tools
 
-The resulting segments help identify differences in customer engagement and historical value.
+| Category | Technologies |
+|---|---|
+| Programming | Python |
+| Data Manipulation | Pandas |
+| Database | SQLite |
+| Query Language | SQL |
+| Analysis | RFM Analysis, Cohort Analysis, EDA |
+| Visualization | Power BI |
+| Development Environment | Jupyter Notebook |
+| Version Control | Git, GitHub |
 
-### C. Customer Retention
+---
 
-The December 2009 acquisition cohort recorded 35.3% retention in its second month.
-
-This highlights an early lifecycle drop-off that could be investigated further through customer engagement and retention analysis.
-
-# 11. Business Implications
-
-The analytical findings provide several areas for potential business investigation.
-
-**1. Customer Retention**
-
-The early decline in cohort retention suggests that customer engagement after the first purchase deserves further investigation.
-
-Businesses could evaluate post-purchase communication, customer experience and retention initiatives.
-
-**2. Customer Segmentation**
-
-RFM segmentation allows businesses to distinguish between customer groups based on historical purchasing behaviour.
-
-Different engagement strategies could be investigated for high-value, frequent and less recently active customers.
-
-**3. Revenue Monitoring**
-
-Transaction-level revenue calculations and reporting visuals provide a structured view of historical sales performance.
-
-This can support further analysis of purchasing patterns and customer contribution.
-
-These are potential business implications rather than verified improvements in business performance.
-
-# 12. Repository Structure
+## 10. Repository Structure
 
 ```text
 retail_analysis/
 │
 ├── Retail_analysis.ipynb
-│   └── Main notebook containing data processing,
-│       SQL analysis, RFM segmentation and cohort analysis
 │
 ├── online_retail_II.csv
-│   └── Available raw analytical dataset extract
 │
 ├── 1_Cleaned_Transactions.csv
-│   └── Retained transactional records
 │
 ├── 2_RFM_Segments.csv
-│   └── Customer-level RFM segmentation output
 │
 ├── 3_Cohort_Retention.csv
-│   └── Cohort retention analysis output
 │
 ├── overall_record.jpeg
-│   └── Data overview screenshot
-│
-├── count_id.jpeg
-│   └── Customer count screenshot
-│
 ├── sum_ofrevenue.jpeg
-│   └── Revenue KPI screenshot
-│
+├── count_id.jpeg
 ├── graphical_representation.jpeg
-│   └── Power BI reporting visual
 │
 └── README.md
-    └── Project documentation
 ```
 
-# 13. How to Run the Project
+---
 
-### Prerequisites
+## 11. Running the Project
+
+### Requirements
 
 - Python 3.x
 - Jupyter Notebook
 - Pandas
-- SQLite support through Python's built-in sqlite3 library
+- NumPy
+- Matplotlib
+- SQLite (available through Python's built-in `sqlite3` module)
 
 ### Installation
 
-Clone the repository:
+Install the required Python libraries:
 
 ```bash
-git clone https://github.com/karanpaul2006-gif/retail_analysis.git
+pip install pandas numpy matplotlib jupyter
 ```
 
-Navigate to the project directory:
+### Execution
 
-```bash
-cd retail_analysis
-```
-
-Install the required Python package:
-
-```bash
-pip install pandas jupyter
-```
-
-Launch Jupyter Notebook:
-
-```bash
-jupyter notebook
-```
-
-Open:
-
-```text
-Retail_analysis.ipynb
-```
-
-Execute the notebook cells sequentially to reproduce the analytical workflow.
-
-Ensure that the CSV file paths used in the notebook match the repository structure.
-
-### Power BI Files
-
-The repository contains exported Power BI screenshots rather than a downloadable PBIX file.
-
-The screenshots can be viewed directly through the repository.
-
-# 14. Limitations
-
-The project has several limitations:
-
-- The repository contains an extract rather than the complete original UCI dataset.
-- Records with missing Customer IDs are excluded from customer-level analysis.
-- Non-positive quantities are excluded from the sales analysis.
-- The analysis focuses on historical transactional behaviour.
-- RFM segments represent historical purchasing patterns rather than guaranteed future customer behaviour.
-- Cohort retention measures observed repeat purchasing and does not establish the reasons behind customer inactivity.
-- An interactive Power BI report is not included in the repository.
-
-These limitations should be considered when interpreting the findings.
-
-# 15. Future Improvements
-
-Potential extensions include:
-
-- Comparing customer retention across different acquisition periods.
-- Investigating factors associated with early customer inactivity.
-- Developing more detailed customer engagement strategies.
-- Comparing RFM segments with future purchasing behaviour.
-- Adding interactive Power BI reporting.
-- Exploring customer lifetime value estimation.
-- Developing customer churn prediction models.
-
-# 16. Skills Demonstrated
-
-**Programming:** Python, Pandas and Jupyter Notebook.
-
-**SQL & Databases:** SQLite, SQL filtering and data extraction.
-
-**Data Analytics:** Exploratory Data Analysis, revenue analysis, customer purchasing behaviour and data cleaning.
-
-**Customer Analytics:** RFM segmentation and cohort retention analysis.
-
-**Business Intelligence:** Power BI reporting visuals and analytical interpretation.
-
-**Data Management:** Transaction processing, customer-level aggregation and structured analytical outputs.
+1. Clone or download this repository.
+2. Open `Retail_analysis.ipynb` in Jupyter Notebook.
+3. Ensure `online_retail_II.csv` is available in the working directory.
+4. Execute the notebook cells sequentially.
+5. Review the cleaning operations, SQL queries, RFM segmentation and cohort retention analysis.
 
 ---
 
-**Author:** Karan Paul Arora
+## 12. Project Limitations
 
-**Project:** E-Commerce Retail Analytics
+- The analysis uses a 244,618-record working dataset rather than the complete 1,067,371-record UCI dataset.
+- Customer-level analysis excludes records without valid customer identifiers.
+- The Power BI `.pbix` file and interactive report are not currently included.
+- The findings are based on historical transactional data and should not be interpreted as verified outcomes from an implemented business intervention.
+- The analysis identifies retention patterns but does not establish the causes of customer churn.
+
+---
+
+## 13. Conclusion
+
+This project demonstrates an end-to-end retail analytics workflow, covering data cleaning, SQL-based analysis, customer segmentation, cohort retention analysis and business-oriented reporting.
+
+By combining Python, Pandas, SQLite, SQL and Power BI, the project transforms transactional records into structured customer and business insights.
+
+It demonstrates practical applications of data analytics in e-commerce, particularly in understanding customer value, purchasing behaviour and retention patterns.
+
+---
+
+## Dataset Citation
+
+Chen, D. (2012). Online Retail II [Dataset]. UCI Machine Learning Repository.
+
+https://doi.org/10.24432/C5CG6D
